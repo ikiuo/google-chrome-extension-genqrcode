@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <style>
+     html {
+         min-width: 20em;
+         min-height: 5em;
+     }
+     details {
+         background-color: #fcfcfc;
+     }
+     textarea {
+         min-width: 20em;
+         min-height: 1em;
+     }
+     table.noborder {
+         border: solid 0px;
+         border-collaspe: collaspe;
+         border-spacing: 0;
+     }
+     table.border1 {
+         border: solid 0px;
+         border-left: solid 1px black;
+         border-top: solid 1px black;
+         border-collaspe: collaspe;
+         border-spacing: 0;
+     }
+     th.border1, td.border1 {
+         border: solid 0px;
+         border-right: solid 1px black;
+         border-bottom: solid 1px black;
+         padding: 4px;
+     }
+     .xsmall {
+         font-size: x-small;
+     }
+     .xxsmall {
+         font-size: xx-small;
+     }
+     .center {
+         text-align: center;
+     }
+     .error {
+         color: darkred;
+     }
+     #tagQRCode {
+         background-color: #f8f8f8;
+         padding: 4px;
+         text-align: center;
+     }
+    </style>
+  </head>
+  <body>
+    <table class="noborder">
+      <tr>
+        <td>
+          文字列からQRコードのGIF画像を生成します。
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <textarea id="tagInput"></textarea>
+        </td>
+      </tr>
+    </table>
+
+    <details id="tagSettings">
+      <summary>設定</summary>
+      <table class="border1" width="100%">
+        <tr>
+          <th class="border1">拡大率</th>
+          <td class="border1">
+            <input id="tagScale" name="tagScale" type="number" min="1" max="16" step="1" value="2" />
+            <label for="tagScale">(1〜16)</label>
+          </td>
+        </tr>
+        <tr>
+          <th class="border1">既定文字</th>
+          <td class="border1">
+            <input id="tagCharSetISO" type="radio" name="qrcharset" value="ISO" checked>
+            <label for="tagCharSetISO">ISO 8859-1 (国際規格)</label>
+            <br>
+            <input id="tagCharSetJIS" type="radio" name="qrcharset" value="JIS">
+            <label for="tagCharSetJIS">シフトJIS (JIS規格)</label>
+          </td>
+        </tr>
+        <tr>
+          <th class="border1">訂正能力</th>
+          <td class="border1">
+            <input id="tagCorrectL" type="radio" name="qrcorrect" value="L">
+            <label for="tagCorrectL">7%</label>
+            <input id="tagCorrectM" type="radio" name="qrcorrect" value="M">
+            <label for="tagCorrectM">15%</label>
+            <input id="tagCorrectQ" type="radio" name="qrcorrect" value="Q" checked>
+            <label for="tagCorrectQ">25%</label>
+            <input id="tagCorrectH" type="radio" name="qrcorrect" value="H">
+            <label for="tagCorrectH">30%</label>
+          </td>
+        </tr>
+        <tr>
+          <td class="border1" colspan="2">
+            <button id="tagReset" class="xsmall">設定をリセット</button>
+          </td>
+        </tr>
+      </table>
+    </details>
+
+    <table width="100%">
+      <tr><td id="tagQRCode"></td></tr>
+    </table>
+
+    <div class="xxsmall center">「QRコード」は(株)デンソーウェーブの登録商標です。</div>
+
+    <details id="tagInfo">
+      <summary>用語・設定・使用方法など</summary>
+      <div id="tagInfoSub">
+        <hr>
+        <p>
+          QRコード内の最小単位の四角形(点)は<strong>モジュール</strong>と呼ばれています。
+        </p>
+        <p>
+          周辺余白は<strong>クワイエットゾーン</strong>と呼ばれていて、規格では４モジュール分の幅が定められています。
+          <strong style="color: darkred;">クワイエットゾーンを削る(規格通りに表示しない)と、読めない理由の筆頭になる</strong>ので注意してください。
+        </p>
+        <hr>
+        <p>
+          <strong>「拡大率」</strong>はモジュールに対する画像のピクセル幅になります。
+        </p>
+        <p>
+          <strong>「既定文字」</strong>は使用する国・地域など様々ですが、この拡張機能では ISO 8859-1 とシフト JIS の２種類です。
+          リーダーの既定文字と異なると文字化けすることがあります。
+        </p>
+        <p>
+          <strong>「訂正能力」</strong>は破損や汚れなどによる損傷を訂正する能力です。
+          能力が高いほど情報が増えるため、QRコードは大きくなります。
+          また、損傷箇所によっては数値未満の損傷でも読めない可能性があります。
+        </p>
+        <hr>
+        <p>
+          文字列入力領域の右下端をドラッグすると入力領域の大きさを変えられます。
+        </p>
+        <p>
+          生成されたQRコードはGIF画像です。ドラッグ＆ドロップや右クリックのメニューが有効です。
+        </p>
+      </div>
+    </details>
+
+  </body>
+  <script src="popup.js"></script>
+</html>
