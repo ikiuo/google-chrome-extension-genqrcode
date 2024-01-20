@@ -1,15 +1,10 @@
 {
   "manifest_version": 3,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "name": "QRコードのGIF画像生成",
   "description": "文字列からQRコードのGIF画像を生成します。文字列の初期値は開いているページのURLです。",
   "action": {"default_popup": "popup.html"},
   "permissions": ["storage", "tabs"],
-  "content_scripts": [{
-    "matches": ["<all_urls>"],
-    "match_about_blank": true,
-    "js": ["content-script.js"]
-  }],
   "icons": {
     "32": "icon32.png",
     "64": "icon64.png"
