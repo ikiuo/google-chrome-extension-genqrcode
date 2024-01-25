@@ -2037,15 +2037,21 @@ function correctQRCorrect(correct) {
 	return 'Q';
 }
 
+function correctQRFixCorrect(fixcorrect) {
+	return Boolean(fixcorrect);
+}
+
 function getQRScale() {
 	return correctQRScale(tagScale.value);
 }
+
 function getQRCharSet() {
 	return correctQRCharSet((() => {
 		if (tagCharSetISO.checked) return tagCharSetISO.value;
 		if (tagCharSetJIS.checked) return tagCharSetJIS.value;
 	})());
 }
+
 function getQRCorrect() {
 	return correctQRCorrect((() => {
 		if (tagCorrectL.checked) return tagCorrectL.value;
@@ -2053,6 +2059,10 @@ function getQRCorrect() {
 		if (tagCorrectQ.checked) return tagCorrectQ.value;
 		if (tagCorrectH.checked) return tagCorrectH.value;
 	})());
+}
+
+function getQRFixCorrect() {
+	return correctQRFixCorrect(tagFixCorrect.checked);
 }
 
 /*
@@ -2067,6 +2077,7 @@ function getSettings() {
 		scale: getQRScale(),
 		charset: getQRCharSet(),
 		correct: getQRCorrect(),
+		fixcorrect: getQRFixCorrect(),
 	}
 }
 
@@ -2083,6 +2094,9 @@ function putSettings() {
 	tagCorrectM.checked = (correct == 'M');
 	tagCorrectQ.checked = (correct == 'Q');
 	tagCorrectH.checked = (correct == 'H');
+
+	const fixcorrect = correctQRFixCorrect(extSettings.fixcorrect);
+	tagFixCorrect.checked = fixcorrect;
 }
 
 function resetSettings() {
@@ -2090,6 +2104,7 @@ function resetSettings() {
 	extSettings.scale = 2;
 	extSettings.charset = 'ISO';
 	extSettings.correct = 'Q';
+	extSettings.fixcorrect = true;
 	saveSettings();
 
 	extSettings.open = true;
@@ -2101,12 +2116,14 @@ function loadSettings() {
 		chrome.storage.sync.get('open'),
 		chrome.storage.sync.get('scale'),
 		chrome.storage.sync.get('charset'),
-		chrome.storage.sync.get('correct')
+		chrome.storage.sync.get('correct'),
+		chrome.storage.sync.get('fixcorrect')
 	]).then((values) => {
 		extSettings.open = values[0].open ?? tagSettings.open;
 		extSettings.scale = correctQRScale(values[1].scale) ?? getQRScale();
 		extSettings.charset = correctQRCharSet(values[2].charset) ?? getQRCharSet();
 		extSettings.correct = correctQRCorrect(values[3].correct) ?? getQRCorrect();
+		extSettings.fixcorrect = correctQRFixCorrect(values[4].fixcorrect) ?? getQRFixCorrect();
 	});
 }
 
@@ -2126,7 +2143,8 @@ function onUpdate() {
 	const qrscale = getQRScale();
 	const qrcharset = getQRCharSet();
 	const qrcorrect = getQRCorrect();
-	const correct = { 'L': 1, 'M': 2, 'Q': 3, 'H': 4 }[qrcorrect];
+	const qrfixcorrect = getQRFixCorrect();
+	let correct = { 'L': 1, 'M': 2, 'Q': 3, 'H': 4 }[qrcorrect];
 
 	while (tagQRCode.firstChild)
 		tagQRCode.removeChild(tagQRCode.firstChild);
@@ -2143,7 +2161,17 @@ function onUpdate() {
 	}
 	const scale = Math.min(16, Math.max(1, qrscale));
 	const qrimages = qrmessage.autoEncode(option, scale);
+	if (qrfixcorrect) {
+		while (correct < 4) {
+			const qrcurr = qrimages[correct + 0];
+			const qrnext = qrimages[correct + 1];
+			if (qrcurr.type.size != qrnext.type.size)
+				break;
+			++correct;
+		}
+	}
 	const qrimage = qrimages[correct];
+	const correct_name = ['μ:0%', 'L:7%', 'M:15%', 'Q:25%', 'H:30%'];
 
 	if (qrimage) {
 		currentQRImage = qrimage.gif;
@@ -2164,7 +2192,7 @@ function onUpdate() {
 			'beforeend',
 			[
 				'<div class="small center">',
-				`Type ${qrtype} (${qrsize} x ${qrsize})`,
+				`${qrtype}型 (${qrsize} x ${qrsize}) ${correct_name[correct]}`,
 				'</div>',
 				'<div class="xxsmall center">',
 				`[GIF:${currentQRImage.binary.length}バイト]`,
@@ -2208,6 +2236,7 @@ function onLoad() {
 	[
 		tagCharSetISO, tagCharSetJIS,
 		tagCorrectL, tagCorrectM, tagCorrectQ, tagCorrectH,
+		tagFixCorrect,
 	].forEach((tag) => tag.onclick = onChange);
 	tagReset.onclick = onReset;
 	// tagInfoSub.onclick = (() => { tagInfo.open = !tagInfo.open; });

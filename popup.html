@@ -32,6 +32,9 @@
          border-bottom: solid 1px black;
          padding: 4px;
      }
+     .small {
+         font-size: small;
+     }
      .xsmall {
          font-size: x-small;
      }
@@ -87,15 +90,19 @@
         </tr>
         <tr>
           <th class="border1">訂正能力</th>
-          <td class="border1">
+          <td class="border1 small">
             <input id="tagCorrectL" type="radio" name="qrcorrect" value="L">
-            <label for="tagCorrectL">7%</label>
+            <label for="tagCorrectL">L:7%</label>
             <input id="tagCorrectM" type="radio" name="qrcorrect" value="M">
-            <label for="tagCorrectM">15%</label>
+            <label for="tagCorrectM">M:15%</label>
+            <br>
             <input id="tagCorrectQ" type="radio" name="qrcorrect" value="Q" checked>
-            <label for="tagCorrectQ">25%</label>
+            <label for="tagCorrectQ">Q:25%</label>
             <input id="tagCorrectH" type="radio" name="qrcorrect" value="H">
-            <label for="tagCorrectH">30%</label>
+            <label for="tagCorrectH">H:30%</label>
+            <br>
+            <input id="tagFixCorrect" type="checkbox" name="qrfixcorrect" checked>
+            <label for="tagFixCorrect">自動強化<small>(同一型内)</small></label>
           </td>
         </tr>
         <tr>
@@ -116,33 +123,36 @@
       <summary>用語・設定・使用方法など</summary>
       <div id="tagInfoSub">
         <hr>
-        <p>
-          QRコード内の最小単位の四角形(点)は<strong>モジュール</strong>と呼ばれています。
-        </p>
-        <p>
-          周辺余白は<strong>クワイエットゾーン</strong>と呼ばれていて、規格では４モジュール分の幅が定められています。
-          <strong style="color: darkred;">クワイエットゾーンを削る(規格通りに表示しない)と、読めない理由の筆頭になる</strong>ので注意してください。
-        </p>
+
+        <h3>用語</h3>
+        <h4>モジュール</h4>
+        <p>QRコード内の最小単位の四角形(点)です。</p>
+        <h4>クワイエットゾーン</h4>
+        <p>周辺余白はクワイエットゾーンと呼ばれていて、規格では４モジュール分の幅が定められています。</p>
+        <p class="xsmall">注意：<strong style="color: darkred;">クワイエットゾーンを削る(規格通りに表示しない)と、読めない理由の筆頭になります。</strong></p>
         <hr>
+
+        <h3>設定</h3>
+        <h4>拡大率</h4>
+        <p>モジュールに対する画像のピクセル幅になります。</p>
+        <h4>既定文字</h4>
         <p>
-          <strong>「拡大率」</strong>はモジュールに対する画像のピクセル幅になります。
+          既定文字は使用する国・地域など様々ですが、この拡張機能では ISO 8859-1 とシフト JIS の２種類しかサポートしていません。
+          作った QR コードと QR コード リーダーの既定文字が異なると文字化けすることがあります。
         </p>
+        <h4>訂正能力</h4>
         <p>
-          <strong>「既定文字」</strong>は使用する国・地域など様々ですが、この拡張機能では ISO 8859-1 とシフト JIS の２種類です。
-          リーダーの既定文字と異なると文字化けすることがあります。
-        </p>
-        <p>
-          <strong>「訂正能力」</strong>は破損や汚れなどによる損傷を訂正する能力です。
+          破損や汚れなどによる損傷を訂正する能力です。
           能力が高いほど情報が増えるため、QRコードは大きくなります。
           また、損傷箇所によっては数値未満の損傷でも読めない可能性があります。
         </p>
+        <p>
+          「自動強化」がチェックされていると、同じ大きさの中で訂正能力が高い方を選択します。
+        </p>
         <hr>
-        <p>
-          文字列入力領域の右下端をドラッグすると入力領域の大きさを変えられます。
-        </p>
-        <p>
-          生成されたQRコードはGIF画像です。ドラッグ＆ドロップや右クリックのメニューが有効です。
-        </p>
+        <h3>使用方法</h3>
+        <p>文字列入力領域の右下端をドラッグすると入力領域の大きさを変えられます。</p>
+        <p>生成されたQRコードはGIF画像です。ドラッグ＆ドロップや右クリックのメニューが有効です。</p>
       </div>
     </details>
 
